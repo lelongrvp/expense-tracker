@@ -24,9 +24,19 @@ RUN apt-get update -qq && \
 COPY --link bun.lockb package.json ./
 RUN bun install --ci
 
+# Install front-end node modules
+COPY --link client/bun.lockb client/package.json ./client/
+RUN cd client && bun install --ci
+
 # Copy application code
 COPY --link . .
 
+# Change to client directory and build the front-end
+WORKDIR /app/client
+RUN bun run build
+
+#Remove all files in front-end except for the dist folder
+RUN find . -mindepth 1 ! -regex '^./dist\(/.*\)?' -delete
 
 # Final stage for app image
 FROM base

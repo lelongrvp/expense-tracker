@@ -10,6 +10,6 @@ app.use("*", logger());
 app.route("/api/expenses", expensesRoute);
 
 app.use("*", serveStatic({ root: "./client/dist" }));
-app.get("*", serveStatic({ path: "/client/dist/index.html" }));
+app.get("*", serveStatic({ path: "./client/dist/index.html" }));
 
 export default app;

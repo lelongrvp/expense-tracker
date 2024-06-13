@@ -59,12 +59,45 @@ function CreateExpense() {
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
+                <p className="text-[12px] text-red-500">
+                  {field.state.meta.errors}
+                </p>{" "}
               </>
             );
           }}
         ></form.Field>
-        <Label>Amount:</Label>
-        <Input type="number" />
+        <form.Field
+          name="amount"
+          validators={{
+            onChange: ({ value }) =>
+              !value
+                ? "Amount is required"
+                : typeof value !== "number"
+                  ? "Amount must be a number"
+                  : undefined,
+            onChangeAsyncDebounceMs: 500,
+          }}
+          children={(field) => {
+            return (
+              <>
+                <Label htmlFor={field.name}>Amount:</Label>
+                <Input
+                  id={field.name}
+                  type="number"
+                  name={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.valueAsNumber)}
+                />
+                {field.state.meta.errors && (
+                  <p className="text-[12px] text-red-500">
+                    {field.state.meta.errors}
+                  </p>
+                )}
+              </>
+            );
+          }}
+        ></form.Field>
         <Button className="w-fit" type="submit">
           Create
         </Button>
